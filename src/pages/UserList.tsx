@@ -40,14 +40,7 @@ export default function UserList() {
     fetchUsers();
   }, []);
 
-  const TABLE_HEAD = [
-    { id: "firstName", label: "First Name", align: "left" },
-    { id: "age", label: "Age", align: "left" },
-    { id: "email", label: "Email", align: "left" },
-    { id: "phone", label: "Phone", align: "left" },
-    { id: "company_name", label: "Company Name", align: "left" },
-    { id: "company_department", label: "Company Department", align: "left" },
-  ];
+  console.log(users);
 
   // ===========================================
   //                BREADCRUMBS
@@ -83,6 +76,17 @@ export default function UserList() {
   ];
 
   // ===========================================
+  //         TABLE CONSTS AND FUNCTIONS
+  // ===========================================
+
+  const TABLE_HEAD = [
+    { id: "firstName", label: "Name", align: "left" },
+    { id: "age", label: "Age", align: "left" },
+    { id: "email", label: "Email", align: "left" },
+    { id: "phone", label: "Phone", align: "left" },
+    { id: "company_name", label: "Company Name", align: "left" },
+    { id: "company_department", label: "Company Department", align: "left" },
+  ];
 
   return (
     <Box sx={{ maxWidth: "80%", mx: "auto" }}>

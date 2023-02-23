@@ -9,8 +9,15 @@ interface Props {
 
 export default function TableCustomRow({ row }: Props) {
   const { firstName, lastName, age, email, phone, company } = row;
+
+  const RowHoverSx = {
+    px: 10,
+    "&:hover": {
+      backgroundColor: "lightblue",
+    },
+  };
   return (
-    <TableRow>
+    <TableRow sx={RowHoverSx}>
       <TableCell>
         {firstName} {lastName}
       </TableCell>
