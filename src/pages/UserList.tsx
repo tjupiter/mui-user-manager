@@ -10,6 +10,8 @@ import {
   TablePagination,
   Typography,
 } from "@mui/material";
+// custom components
+import { TableToolBar } from "../components";
 // hooks
 import useIsLoading from "../hooks/useIsLoading";
 // API
@@ -26,12 +28,16 @@ import {
 export default function UserList() {
   const { isLoading, loadingStarted, loadingFinished } = useIsLoading();
   const [users, setUsers] = useState<User[]>([]);
+  const [departmentOptions, setDepartmentOptions] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchUsers() {
       try {
         const users = await getUsers();
         setUsers(users);
+        const deptOptions = users.map((user) => user.company.department);
+        // const uniqueDeptOptions = [...new Set (deptOptions)]
+        setDepartmentOptions(deptOptions);
         loadingFinished();
       } catch (error) {
         console.error(error);
@@ -89,20 +95,23 @@ export default function UserList() {
   ];
 
   return (
-    <Box sx={{ maxWidth: "80%", mx: "auto" }}>
+    <Box sx={{ px: 5 }}>
       <HeaderBreadCrumbs heading='User Management' breadcrumbs={BREADCRUMBS} />
       <TableContainer>
         {isLoading ? (
           <Skeleton height={300} width={500}></Skeleton>
         ) : (
-          <Table>
-            <TableCustomHead headLabel={TABLE_HEAD} />
-            <TableBody>
-              {users.map((user) => (
-                <TableCustomRow row={user} key={user.id} />
-              ))}
-            </TableBody>
-          </Table>
+          <>
+            <TableToolBar sx={{ p: 2 }} selectOptions={departmentOptions} />
+            <Table>
+              <TableCustomHead headLabel={TABLE_HEAD} />
+              <TableBody>
+                {users.map((user) => (
+                  <TableCustomRow row={user} key={user.id} />
+                ))}
+              </TableBody>
+            </Table>
+          </>
         )}
       </TableContainer>
       <TablePagination
