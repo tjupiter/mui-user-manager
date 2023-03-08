@@ -26,6 +26,7 @@ import {
   HeaderBreadCrumbs,
   TableCustomHead,
   TableCustomRow,
+  TableNoData,
 } from "../components";
 
 export default function UserList() {
@@ -124,6 +125,8 @@ export default function UserList() {
     department: department,
   });
 
+  const isNotFound = filteredData.length === 0;
+
   return (
     <Box sx={{ px: 5 }}>
       <HeaderBreadCrumbs heading='User Management' breadcrumbs={BREADCRUMBS} />
@@ -146,6 +149,7 @@ export default function UserList() {
                 {filteredData.map((user) => (
                   <TableCustomRow row={user} key={user.id} />
                 ))}
+                {isNotFound && <TableNoData title='Not Found' />}
               </TableBody>
             </Table>
           </>
