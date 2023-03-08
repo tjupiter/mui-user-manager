@@ -1,6 +1,13 @@
 import { useState } from "react";
 // @mui
-import { Box, InputLabel, Stack, SxProps, TextField } from "@mui/material";
+import {
+  Box,
+  InputLabel,
+  MenuItem,
+  Stack,
+  SxProps,
+  TextField,
+} from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 // custom component
 import { Iconify } from "..";
@@ -8,30 +15,44 @@ import { Iconify } from "..";
 interface Props {
   selectOptions: string[];
   sx?: SxProps;
+  searchFieldValue: string;
+  filterDropdownValue: string;
+  handleFilterDropdown: (selectedDept: string) => void;
+  handleSearchfield: (fieldValue: string) => void;
 }
-
-export default function TableToolBar({ selectOptions, sx }: Props) {
-  const [department, setDepartment] = useState<string>("");
-
-  const handleSelectChange = (event: SelectChangeEvent) => {
-    setDepartment(event.target.value);
-  };
-
+export default function TableToolBar({
+  selectOptions,
+  sx,
+  searchFieldValue,
+  filterDropdownValue,
+  handleFilterDropdown,
+  handleSearchfield,
+}: Props) {
+  console.log(selectOptions);
   return (
     <Stack spacing={2} direction={{ xs: "column", md: "row" }} sx={{ ...sx }}>
-      <Box>
-        <InputLabel id='department-select-label'>Department</InputLabel>
-        <Select
-          labelId='department-select-label'
-          label='Department'
-          value={department}
-          onChange={handleSelectChange}
-        ></Select>
-      </Box>
+      <TextField
+        sx={{ minWidth: "25%" }}
+        label='Department'
+        placeholder='Department'
+        value={filterDropdownValue}
+        defaultValue='All'
+        onChange={(e) => handleFilterDropdown(e.target.value)}
+        select
+      >
+        {selectOptions.map((dept, index) => (
+          <MenuItem value={dept} key={index}>
+            {dept}
+          </MenuItem>
+        ))}
+      </TextField>
+
       <TextField
         fullWidth
         label='Search...'
         placeholder='Search...'
+        value={searchFieldValue}
+        onChange={(e) => handleSearchfield(e.target.value)}
         InputProps={{
           startAdornment: (
             <Iconify

@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { SnackbarProvider } from "notistack";
 
 import { UserList } from "./pages";
 
@@ -33,7 +34,10 @@ const router = createBrowserRouter([
 ]);
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <SnackbarProvider maxSnack={3}>
+      {" "}
+      <RouterProvider router={router} />
+    </SnackbarProvider>
   </React.StrictMode>
 );
 

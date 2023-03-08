@@ -17,8 +17,8 @@ export default function TableCustomHead({ headLabel }: Props) {
   return (
     <TableHead>
       <TableRow sx={tableHeadSx}>
-        {headLabel.map((headCell) => (
-          <TableCell>{headCell.label}</TableCell>
+        {headLabel.map((headCell, index) => (
+          <TableCell key={index}>{headCell.label}</TableCell>
         ))}
       </TableRow>
     </TableHead>

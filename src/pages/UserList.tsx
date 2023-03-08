@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSnackbar } from "notistack";
 // mui
 import {
   Box,
@@ -15,7 +16,9 @@ import { TableToolBar } from "../components";
 // hooks
 import useIsLoading from "../hooks/useIsLoading";
 // API
-import { getUsers } from "../api";
+import { getUsers, getDepartments } from "../api";
+// utils
+import { filterTableData } from "../utils";
 // types
 import { User } from "../types";
 // components
@@ -28,25 +31,34 @@ import {
 export default function UserList() {
   const { isLoading, loadingStarted, loadingFinished } = useIsLoading();
   const [users, setUsers] = useState<User[]>([]);
-  const [departmentOptions, setDepartmentOptions] = useState<string[]>([]);
+  const [departmentOptions, setDepartmentOptions] = useState<string[]>(["All"]);
+
+  const [department, setDepartment] = useState<string>("All");
+  const [searchfieldValue, setSearchfieldValue] = useState<string>("");
+
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const users = await getUsers();
+        const [users, departments] = await Promise.all([
+          getUsers(),
+          getDepartments(),
+        ]);
         setUsers(users);
-        const deptOptions = users.map((user) => user.company.department);
-        // const uniqueDeptOptions = [...new Set (deptOptions)]
-        setDepartmentOptions(deptOptions);
-        loadingFinished();
+        const depOpts = departmentOptions.concat(departments);
+        setDepartmentOptions(depOpts);
       } catch (error) {
         console.error(error);
+        enqueueSnackbar(
+          `Whops, something went wrong here: fetchUsers() \n ${error}`
+        );
       }
     }
-    fetchUsers();
+    fetchUsers().finally(() => loadingFinished());
   }, []);
 
-  console.log(users);
+  console.log(departmentOptions);
 
   // ===========================================
   //                BREADCRUMBS
@@ -94,6 +106,24 @@ export default function UserList() {
     { id: "company_department", label: "Company Department", align: "left" },
   ];
 
+  // ===========================================
+  //                  FILTERING
+  // ===========================================
+
+  const handleFilterDropdown = (selectedDept: string) => {
+    setDepartment(selectedDept);
+  };
+
+  const handleSearchfield = (fieldValue: string) => {
+    setSearchfieldValue(fieldValue);
+  };
+
+  const filteredData = filterTableData({
+    tableData: users,
+    searchFieldValue: searchfieldValue,
+    department: department,
+  });
+
   return (
     <Box sx={{ px: 5 }}>
       <HeaderBreadCrumbs heading='User Management' breadcrumbs={BREADCRUMBS} />
@@ -102,11 +132,18 @@ export default function UserList() {
           <Skeleton height={300} width={500}></Skeleton>
         ) : (
           <>
-            <TableToolBar sx={{ p: 2 }} selectOptions={departmentOptions} />
+            <TableToolBar
+              sx={{ p: 2 }}
+              selectOptions={departmentOptions}
+              searchFieldValue={searchfieldValue}
+              filterDropdownValue={department}
+              handleFilterDropdown={handleFilterDropdown}
+              handleSearchfield={handleSearchfield}
+            />
             <Table>
               <TableCustomHead headLabel={TABLE_HEAD} />
               <TableBody>
-                {users.map((user) => (
+                {filteredData.map((user) => (
                   <TableCustomRow row={user} key={user.id} />
                 ))}
               </TableBody>
