@@ -3,6 +3,7 @@ import { useSnackbar } from "notistack";
 // mui
 import {
   Box,
+  Card,
   Link,
   Skeleton,
   Table,
@@ -48,6 +49,7 @@ export default function UserList() {
         ]);
         setUsers(users);
         const depOpts = departmentOptions.concat(departments);
+        console.log(depOpts);
         setDepartmentOptions(depOpts);
       } catch (error) {
         console.error(error);
@@ -130,39 +132,47 @@ export default function UserList() {
   return (
     <Box sx={{ px: 5 }}>
       <HeaderBreadCrumbs heading='User Management' breadcrumbs={BREADCRUMBS} />
-      <TableContainer>
-        {isLoading ? (
-          <Skeleton height={300} width={500}></Skeleton>
-        ) : (
-          <>
-            <TableToolBar
-              sx={{ p: 2 }}
-              selectOptions={departmentOptions}
-              searchFieldValue={searchfieldValue}
-              filterDropdownValue={department}
-              handleFilterDropdown={handleFilterDropdown}
-              handleSearchfield={handleSearchfield}
-            />
-            <Table>
-              <TableCustomHead headLabel={TABLE_HEAD} />
-              <TableBody>
-                {filteredData.map((user) => (
-                  <TableCustomRow row={user} key={user.id} />
-                ))}
-                {isNotFound && <TableNoData title='Not Found' />}
-              </TableBody>
-            </Table>
-          </>
-        )}
-      </TableContainer>
-      <TablePagination
-        component='div'
-        rowsPerPage={10}
-        page={1}
-        count={users.length}
-        rowsPerPageOptions={[5, 10, 20]}
-        onPageChange={() => console.log("onpagechange")}
-      />
+      <Card
+        sx={{
+          borderRadius: ".7rem",
+          boxShadow: "-2px 7px 20px rgba(0, 0, 0, 0.2)",
+          p: 3,
+        }}
+      >
+        <TableContainer>
+          {isLoading ? (
+            <Skeleton height={300} width={500}></Skeleton>
+          ) : (
+            <>
+              <TableToolBar
+                sx={{ p: 2, mb: 3 }}
+                selectOptions={departmentOptions}
+                searchFieldValue={searchfieldValue}
+                filterDropdownValue={department}
+                handleFilterDropdown={handleFilterDropdown}
+                handleSearchfield={handleSearchfield}
+              />
+              <Table>
+                <TableCustomHead headLabel={TABLE_HEAD} />
+                <TableBody>
+                  {filteredData.map((user) => (
+                    <TableCustomRow row={user} key={user.id} />
+                  ))}
+                  {isNotFound && <TableNoData title='Not Found' />}
+                </TableBody>
+              </Table>
+            </>
+          )}
+        </TableContainer>
+        <TablePagination
+          component='div'
+          rowsPerPage={10}
+          page={1}
+          count={users.length}
+          rowsPerPageOptions={[5, 10, 20]}
+          onPageChange={() => console.log("onpagechange")}
+        />
+      </Card>
     </Box>
   );
 }
