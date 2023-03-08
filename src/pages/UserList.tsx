@@ -48,9 +48,8 @@ export default function UserList() {
           getDepartments(),
         ]);
         setUsers(users);
-        const depOpts = departmentOptions.concat(departments);
-        console.log(depOpts);
-        setDepartmentOptions(depOpts);
+        departments.unshift("All");
+        setDepartmentOptions(departments);
       } catch (error) {
         console.error(error);
         enqueueSnackbar(
@@ -60,8 +59,6 @@ export default function UserList() {
     }
     fetchUsers().finally(() => loadingFinished());
   }, []);
-
-  console.log(departmentOptions);
 
   // ===========================================
   //                BREADCRUMBS
@@ -107,6 +104,7 @@ export default function UserList() {
     { id: "phone", label: "Phone", align: "left" },
     { id: "company_name", label: "Company Name", align: "left" },
     { id: "company_department", label: "Company Department", align: "left" },
+    { id: "3dot-menu" },
   ];
 
   // ===========================================
@@ -128,6 +126,29 @@ export default function UserList() {
   });
 
   const isNotFound = filteredData.length === 0;
+
+  // ===========================================
+  //                EDIT / DELETE
+  // ===========================================
+
+  const handleEditRow = (id: number) =>
+    window.alert("This function is not available, yet.");
+
+  const handleDeleteRow = (id: number) => {
+    const filteredRows = users.filter((user) => user.id !== id);
+    setUsers(filteredRows);
+    enqueueSnackbar("Succesfully deleted");
+    // api call
+    // try {
+    //   await deleteUser(id);
+    //   enqueueSnackbar("Succesfully deleted");
+    // } catch (error) {
+    //   console.error(error);
+    //   enqueueSnackbar(`Something went wrong here: ${error}`, {
+    //     variant: "error",
+    //   });
+    // }
+  };
 
   return (
     <Box sx={{ px: 5 }}>
@@ -156,7 +177,12 @@ export default function UserList() {
                 <TableCustomHead headLabel={TABLE_HEAD} />
                 <TableBody>
                   {filteredData.map((user) => (
-                    <TableCustomRow row={user} key={user.id} />
+                    <TableCustomRow
+                      row={user}
+                      key={user.id}
+                      onEditRow={() => handleEditRow(user.id)}
+                      onDeleteRow={() => handleDeleteRow(user.id)}
+                    />
                   ))}
                   {isNotFound && <TableNoData title='Not Found' />}
                 </TableBody>

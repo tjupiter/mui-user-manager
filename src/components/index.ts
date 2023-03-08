@@ -1,6 +1,8 @@
 // components
 //  |-- global
+export { default as AlertDialog } from "./global/AlertDialog";
 export { default as Iconify } from "./global/Iconify";
+export { default as MenuPopOver } from "./global/MenuPopOver";
 //  |-- header
 export { default as HeaderBreadCrumbs } from "./header/HeaderBreadCrumbs";
 //  |-- list

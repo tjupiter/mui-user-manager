@@ -28,7 +28,6 @@ export default function TableToolBar({
   handleFilterDropdown,
   handleSearchfield,
 }: Props) {
-  console.log(selectOptions);
   return (
     <Stack spacing={2} direction={{ xs: "column", md: "row" }} sx={{ ...sx }}>
       <TextField
