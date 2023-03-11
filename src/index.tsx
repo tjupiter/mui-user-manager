@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 
-import { UserList, ErrorPage } from "./pages";
+import { CreateEditUser, UserList, ErrorPage } from "./pages";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -24,11 +24,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/user-management/new",
-    element: <UserList />,
+    element: <CreateEditUser />,
   },
   {
     path: "/user-management/user/:id/edit",
-    element: <div>EDIT</div>,
+    element: <CreateEditUser />,
   },
   {},
 ]);

@@ -12,5 +12,6 @@ export async function getDepartments(): Promise<string[]> {
   const { data } = await axios.get(
     "https://mui-userstable-db-default-rtdb.europe-west1.firebasedatabase.app/departments.json"
   );
+  console.log(data);
   return data;
 }
