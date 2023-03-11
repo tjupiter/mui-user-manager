@@ -15,7 +15,7 @@ import {
 // custom components
 import { TableToolBar } from "../components";
 // hooks
-import useIsLoading from "../hooks/useIsLoading";
+import useIsLoading from "../utils/custom-hooks/useIsLoading";
 // API
 import { getUsers, getDepartments } from "../api";
 // utils
@@ -53,7 +53,7 @@ export default function UserList() {
       } catch (error) {
         console.error(error);
         enqueueSnackbar(
-          `Whops, something went wrong here: fetchUsers() \n ${error}`
+          `Whoops, something went wrong here: fetchUsers() \n ${error}`
         );
       }
     }

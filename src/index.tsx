@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 
-import { UserList } from "./pages";
+import { UserList, ErrorPage } from "./pages";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,9 +15,8 @@ const root = ReactDOM.createRoot(
 const router = createBrowserRouter([
   {
     path: "/",
-
     element: <App />,
-    errorElement: <div>Something went wrong</div>,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/user-management",
@@ -31,6 +30,7 @@ const router = createBrowserRouter([
     path: "/user-management/user/:id/edit",
     element: <div>EDIT</div>,
   },
+  {},
 ]);
 root.render(
   <React.StrictMode>

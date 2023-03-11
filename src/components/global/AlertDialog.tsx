@@ -25,6 +25,7 @@ type Props = {
   dialogDisagree: VoidFunction;
   dialogAgree: VoidFunction;
   handleCloseDialog: (
+    // eslint-disable-next-line
     event?: {},
     reason?: "backdropClick" | "escapeKeyDown"
   ) => void;
