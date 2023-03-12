@@ -1,4 +1,4 @@
-import { useEffect, MouseEvent } from "react";
+import { useEffect, MouseEvent, useState, useMemo } from "react";
 import { useSnackbar } from "notistack";
 import { useLocation, useParams } from "react-router-dom";
 // mui
@@ -14,18 +14,47 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { LoadingButton } from "@mui/lab";
 // components
-import { HeaderBreadCrumbs } from "../components";
-
+import {
+  HeaderBreadCrumbs,
+  RHFAutocomplete,
+  RHFTextField,
+} from "../components";
 // API
-import { getSettings } from "../api";
+import { getSettings, getSingleUser } from "../api";
 // Redux
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setSettingsData } from "../redux/settingsSlice";
+// form: YUP + RHF
+import { object, string, mixed, number } from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import FormProvider from "../utils/custom-hooks/FormProvider";
 // utils
 import useIsLoading from "../utils/custom-hooks/useIsLoading";
+import { isEmpty } from "lodash";
 // types
 import { SettingsState } from "../redux/settingsSlice";
+import { User } from "../types";
+
+interface Resolver {
+  first_name: string;
+  last_name: string;
+  dob: string;
+  email: string;
+  phone: number | string;
+  eye_color: string;
+  hair_color: string;
+  blood_group: string;
+  first_line: string;
+  city_or_town: string;
+  postcode: string;
+  company: string;
+  department: string;
+  title: string;
+}
+
 // ===================================
 //          CUSTOM COMPONENT
 // ===================================
@@ -44,6 +73,8 @@ export default function CreateEditUser() {
   const { id } = useParams();
   const isEdit = pathname.includes("edit");
 
+  const [user, setuser] = useState<User>();
+
   // ===================================
   //            FETCH SETTINGS
   // ===================================
@@ -56,13 +87,28 @@ export default function CreateEditUser() {
       } catch (error) {
         console.error(error);
         enqueueSnackbar(
-          `Whoops, something went wrong here: fetchUsers() \n ${error}`
+          `Whoops, something went wrong here: fetchSettingsData() \n ${error}`,
+          { variant: "error" }
         );
       }
     }
+    async function fetchSingleUser() {
+      try {
+        const singleUser = await getSingleUser(Number(id));
+        setuser(singleUser);
+      } catch (error) {
+        console.error(error);
+        enqueueSnackbar(
+          `Whoops, something went wrong here: fetchUsers() \n ${error}`,
+          { variant: "error" }
+        );
+      }
+    }
+    id && fetchSingleUser();
     fetchSettingsData().finally(() => loadingFinished());
   }, []);
   const settingsFromRedux = useAppSelector((state) => state.settings);
+  // console.log(user);
 
   // ===================================
   //              BREADCRUMBS
@@ -96,210 +142,225 @@ export default function CreateEditUser() {
   ];
 
   // ===================================
-  return (
-    <Box>
-      <HeaderBreadCrumbs
-        heading='User Management'
-        breadcrumbs={BREADCRUMBS}
-        sx={{ pt: 5, pl: 6 }}
-      />
-      <Grid container spacing={5} sx={{ p: 4 }}>
-        <Grid container item xs={12} md={5} direction='column'>
-          <Card sx={{ p: 5 }}>
-            <Stack spacing={5} sx={{ minHeight: "34vh" }}>
-              <Stack spacing={2}>
-                <SectionLabel>Personal info</SectionLabel>
-                <Stack direction='row' spacing={3}>
-                  <Avatar sx={{ width: 120, height: 120 }} />
-                  <Stack direction='column' sx={{ width: "100%" }} spacing={1}>
-                    <TextField
-                      label='First name'
-                      name='first_name'
-                      fullWidth
-                      variant='standard'
-                    />
-                    <TextField
-                      label='Last name'
-                      name='last_name'
-                      fullWidth
-                      variant='standard'
-                    />
-                  </Stack>
-                </Stack>
-                <TextField
-                  label='Date of birth'
-                  name='dob'
-                  fullWidth
-                  variant='standard'
-                />
-                <TextField
-                  label='Email'
-                  name='email'
-                  fullWidth
-                  variant='standard'
-                />
-                <TextField
-                  label='Phone'
-                  name='phone'
-                  fullWidth
-                  variant='standard'
-                />
-              </Stack>
-              <SectionLabel>Additional info</SectionLabel>
-              <Stack direction='row' spacing={3}>
-                <Autocomplete
-                  sx={{ width: "50%" }}
-                  options={settingsFromRedux.eye_color_options}
-                  getOptionLabel={(option) => option}
-                  defaultValue='All'
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant='standard'
-                      label='Eye color'
-                    />
-                  )}
-                />
-                <Autocomplete
-                  sx={{ width: "50%" }}
-                  options={settingsFromRedux.hair_color_options}
-                  getOptionLabel={(option) => option}
-                  defaultValue='All'
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant='standard'
-                      label='Hair color'
-                    />
-                  )}
-                />
-                <Autocomplete
-                  sx={{ width: "50%" }}
-                  options={settingsFromRedux.blood_group_options}
-                  getOptionLabel={(option) => option}
-                  defaultValue='All'
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant='standard'
-                      label='Blood group'
-                    />
-                  )}
-                />
-              </Stack>
-            </Stack>
-          </Card>
-        </Grid>
-        <Grid container item xs={12} md={7} direction='column'>
-          <Card>
-            <Stack
-              spacing={5}
-              sx={{ p: 5, minHeight: "34vh" }}
-              direction='column'
-            >
-              <Stack direction='column' spacing={1}>
-                <SectionLabel>Address</SectionLabel>
-                <TextField
-                  label='First line'
-                  name='first_line'
-                  variant='standard'
-                  autoComplete='address-line1'
-                />
-                <TextField
-                  label='Second line'
-                  name='second_line'
-                  variant='standard'
-                  autoComplete='address-line2'
-                />
-                <TextField
-                  label='City or town'
-                  name='city_or_town'
-                  variant='standard'
-                />
-                <TextField
-                  label='Postcode'
-                  name='postcode'
-                  variant='standard'
-                />
-              </Stack>
+  //      FORM VALIDATION + RHF
+  // ===================================
 
-              <Stack direction='column' spacing={1}>
-                <SectionLabel>Work info</SectionLabel>
-                <TextField label='Company' name='company' variant='standard' />
-                <TextField
-                  label='Department'
-                  name='department'
-                  variant='standard'
-                />
-                <TextField label='Title' name='title' variant='standard' />
+  const NewUserSchema = object().shape({
+    first_name: string().required("First name is required"),
+    last_name: string().required("Last name is required"),
+    dob: string().required("Date of birt is required"),
+    email: string().required("Email is required"),
+    phone: string().required("Phone is required"),
+    eye_color: string().required("Eye color is required"),
+    hair_color: string().required("Hair color is required"),
+    blood_group: string().required("Blood type is required"),
+    first_line: string().required("First line is required"),
+    city_or_town: string().required("City is required"),
+    postcode: string().required("Postcode is required"),
+    company: string().required("Company name is required"),
+    department: string().required("Department is required"),
+    title: string().required("Title is required"),
+  });
+
+  const defaultValues = useMemo(
+    () => ({
+      first_name: user?.firstName || "",
+      last_name: user?.lastName || "",
+      dob: user?.birthDate || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
+      eye_color: user?.eyeColor || "",
+      hair_color: user?.hair.color || "",
+      blood_group: user?.bloodGroup || "",
+      first_line: user?.address.address || "",
+      city_or_town: user?.address.city || "",
+      postcode: user?.address.postalCode || "",
+      company: user?.company.name || "",
+      department: user?.company.department || "",
+      title: user?.company.title || "",
+    }),
+    [user]
+  );
+
+  const methods = useForm<Resolver>({
+    resolver: yupResolver(NewUserSchema),
+    defaultValues,
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = methods;
+
+  useEffect(() => {
+    if (!isEmpty(user) && user) {
+      reset(defaultValues);
+    }
+    if (!isEmpty(user)) {
+      reset(defaultValues);
+    }
+  }, [user]);
+
+  // ===================================
+  //            SUBMIT
+  // ===================================
+
+  const onSubmit = async (data: Resolver) => {
+    try {
+      // !isEmpty(user) ? await updateUser(data, user.id) : createUser(data)
+      console.log(data);
+      enqueueSnackbar(
+        !isEmpty(user)
+          ? "User successfully updated"
+          : "New user successfully created",
+        { variant: "success" }
+      );
+      // navigate('/user-management')
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar("Something went wrong", { variant: "error" });
+    }
+  };
+
+  const onError = (error: any) => console.error(error);
+
+  // ===================================
+  return (
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit, onError)}>
+      <Box>
+        <HeaderBreadCrumbs
+          heading='User Management'
+          breadcrumbs={BREADCRUMBS}
+          sx={{ pt: 5, pl: 6 }}
+        />
+        <Grid container spacing={5} sx={{ p: 4 }}>
+          <Grid container item xs={12} md={5} direction='column'>
+            <Card sx={{ p: 5 }}>
+              <Stack spacing={5} sx={{ minHeight: "57vh" }}>
+                <Stack spacing={2}>
+                  <SectionLabel>Personal info</SectionLabel>
+                  <Stack direction='row' spacing={3}>
+                    <Avatar sx={{ width: 120, height: 120 }} />
+                    <Stack
+                      direction='column'
+                      sx={{ width: "100%" }}
+                      spacing={1}
+                    >
+                      <RHFTextField
+                        label='First name'
+                        name='first_name'
+                        variant='standard'
+                      />
+
+                      <RHFTextField
+                        label='Last name'
+                        name='last_name'
+                        variant='standard'
+                      />
+                    </Stack>
+                  </Stack>
+                  <RHFTextField
+                    label='Date of birth'
+                    name='dob'
+                    variant='standard'
+                  />
+                  <RHFTextField label='Email' name='email' variant='standard' />
+                  <RHFTextField label='Phone' name='phone' variant='standard' />
+                </Stack>
+                <SectionLabel>Additional info</SectionLabel>
+                <Stack direction='row' spacing={3}>
+                  <RHFAutocomplete
+                    label='Eye color'
+                    name='eye_color'
+                    options={settingsFromRedux.eye_color_options}
+                    textFieldVariant='standard'
+                    defaultValue='All'
+                    sx={{ width: "50%" }}
+                    //
+                  />
+                  <RHFAutocomplete
+                    label='Hair color'
+                    name='hair_color'
+                    options={settingsFromRedux.hair_color_options}
+                    textFieldVariant='standard'
+                    defaultValue='All'
+                    sx={{ width: "50%" }}
+                  />
+                  <RHFAutocomplete
+                    label='Blood group'
+                    name='blood_group'
+                    options={settingsFromRedux.blood_group_options}
+                    textFieldVariant='standard'
+                    defaultValue='All'
+                    sx={{ width: "50%" }}
+                  />
+                </Stack>
               </Stack>
-            </Stack>
-          </Card>
+            </Card>
+          </Grid>
+          <Grid container item xs={12} md={7} direction='column'>
+            <Card>
+              <Stack
+                spacing={5}
+                sx={{ p: 5, minHeight: "57vh" }}
+                direction='column'
+              >
+                <Stack direction='column' spacing={1}>
+                  <SectionLabel>Address</SectionLabel>
+                  <RHFTextField
+                    label='First line'
+                    name='first_line'
+                    variant='standard'
+                    autoComplete='address-line1'
+                  />
+                  <RHFTextField
+                    label='Second line'
+                    name='second_line'
+                    variant='standard'
+                    autoComplete='address-line2'
+                  />
+                  <RHFTextField
+                    label='City or town'
+                    name='city_or_town'
+                    variant='standard'
+                  />
+                  <RHFTextField
+                    label='Postcode'
+                    name='postcode'
+                    variant='standard'
+                  />
+                </Stack>
+
+                <Stack direction='column' spacing={1}>
+                  <SectionLabel>Work info</SectionLabel>
+                  <RHFTextField
+                    label='Company'
+                    name='company'
+                    variant='standard'
+                  />
+                  <RHFTextField
+                    label='Department'
+                    name='department'
+                    variant='standard'
+                  />
+                  <RHFTextField label='Title' name='title' variant='standard' />
+                </Stack>
+              </Stack>
+            </Card>
+          </Grid>
+          <Grid item sx={{ ml: "auto" }}>
+            <LoadingButton
+              type='submit'
+              variant='outlined'
+              size='large'
+              loading={isSubmitting}
+            >
+              {!isEmpty(user) ? "Save Change" : "Create User"}
+            </LoadingButton>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </FormProvider>
   );
 }
-
-//"users": [
-// {
-//   "id": 1,
-//   "firstName": "Terry",
-//   "lastName": "Medhurst",
-//   "maidenName": "Smitham",
-//   "age": 50,
-//   "gender": "male",
-//   "email": "atuny0@sohu.com",
-//   "phone": "+63 791 675 8914",
-//   "username": "atuny0",
-//   "password": "9uQFF1Lh",
-//   "birthDate": "2000-12-25",
-//   "image": "https://robohash.org/hicveldicta.png?size=50x50&set=set1",
-//   "bloodGroup": "A−",
-//   "height": 189,
-//   "weight": 75.4,
-//   "eyeColor": "Green",
-//   "hair": {
-//     "color": "Black",
-//     "type": "Strands"
-//   },
-//   "domain": "slashdot.org",
-//   "ip": "117.29.86.254",
-//   "address": {
-//     "address": "1745 T Street Southeast",
-//     "city": "Washington",
-//     "coordinates": {
-//       "lat": 38.867033,
-//       "lng": -76.979235
-//     },
-//     "postalCode": "20020",
-//     "state": "DC"
-//   },
-//   "macAddress": "13:69:BA:56:A3:74",
-//   "university": "Capitol University",
-//   "bank": {
-//     "cardExpire": "06/22",
-//     "cardNumber": "50380955204220685",
-//     "cardType": "maestro",
-//     "currency": "Peso",
-//     "iban": "NO17 0695 2754 967"
-//   },
-//   "company": {
-//     "address": {
-//       "address": "629 Debbie Drive",
-//       "city": "Nashville",
-//       "coordinates": {
-//         "lat": 36.208114,
-//         "lng": -86.58621199999999
-//       },
-//       "postalCode": "37076",
-//       "state": "TN"
-//     },
-//     "department": "Marketing",
-//     "name": "Blanda-O'Keefe",
-//     "title": "Help Desk Operator"
-//   },
-//   "ein": "20-9487066",
-//   "ssn": "661-64-2976",
-//   "userAgent": "Mozilla/5.0 ..."
-// },

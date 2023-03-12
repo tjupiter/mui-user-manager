@@ -32,7 +32,6 @@ export const settingsSlice = createSlice({
   initialState: initialSettingState,
   reducers: {
     setSettingsData(state, { payload }) {
-      console.log(payload);
       state.eye_color_options = payload.eyeColors;
       state.eye_color_options.unshift("All");
       state.hair_color_options = payload.hairColors;

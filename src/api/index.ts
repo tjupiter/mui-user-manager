@@ -7,6 +7,10 @@ export async function getUsers(): Promise<User[]> {
   } = await axios.get("https://dummyjson.com/users");
   return users;
 }
+export async function getSingleUser(id: number): Promise<User> {
+  const { data } = await axios.get(`https://dummyjson.com/users/${id}`);
+  return data;
+}
 
 export async function getSettings(): Promise<Settings> {
   const {
@@ -14,6 +18,5 @@ export async function getSettings(): Promise<Settings> {
   } = await axios.get(
     "https://mui-userstable-db-default-rtdb.europe-west1.firebasedatabase.app/settings.json"
   );
-  console.log(settings);
   return settings;
 }
