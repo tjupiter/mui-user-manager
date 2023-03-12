@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 // mui
 import {
   Box,
@@ -17,7 +18,10 @@ import { TableToolBar } from "../components";
 // hooks
 import useIsLoading from "../utils/custom-hooks/useIsLoading";
 // API
-import { getUsers, getDepartments } from "../api";
+import { getUsers, getSettings } from "../api";
+// redux
+import { useSelector, useDispatch } from "react-redux";
+import { setSettingsData } from "../redux/settingsSlice";
 // utils
 import { filterTableData } from "../utils";
 // types
@@ -38,18 +42,22 @@ export default function UserList() {
   const [department, setDepartment] = useState<string>("All");
   const [searchfieldValue, setSearchfieldValue] = useState<string>("");
 
+  const dispatch = useDispatch();
+
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const [users, departments] = await Promise.all([
+        const [users, settings] = await Promise.all([
           getUsers(),
-          getDepartments(),
+          getSettings(),
         ]);
         setUsers(users);
-        departments.unshift("All");
-        setDepartmentOptions(departments);
+        settings.departments.unshift("All");
+        setDepartmentOptions(settings.departments);
+        dispatch(setSettingsData(settings));
       } catch (error) {
         console.error(error);
         enqueueSnackbar(
@@ -88,9 +96,7 @@ export default function UserList() {
     >
       Users Management
     </Link>,
-    <Typography key='3' color='text.primary'>
-      Users
-    </Typography>,
+    <Typography key='3'>Users</Typography>,
   ];
 
   // ===========================================
@@ -132,7 +138,7 @@ export default function UserList() {
   // ===========================================
 
   const handleEditRow = (id: number) =>
-    window.alert("This function is not available, yet.");
+    navigate(`/user-management/user/${id}/edit`);
 
   const handleDeleteRow = (id: number) => {
     const filteredRows = users.filter((user) => user.id !== id);

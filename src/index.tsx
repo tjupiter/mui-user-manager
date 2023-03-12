@@ -5,6 +5,9 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
+// redux
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
 
 import { CreateEditUser, UserList, ErrorPage } from "./pages";
 
@@ -36,7 +39,9 @@ root.render(
   <React.StrictMode>
     <SnackbarProvider maxSnack={3}>
       {" "}
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </SnackbarProvider>
   </React.StrictMode>
 );

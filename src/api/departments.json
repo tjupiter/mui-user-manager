@@ -1,15 +1,21 @@
 {
-  "departments": [
-    "Marketing",
-    "Services",
-    "Business Development",
-    "Support",
-    "Accounting",
-    "Product Management",
-    "Human Resources",
-    "Research and Development",
-    "Sales",
-    "Legal",
-    "Engineering"
-  ]
+  "settings": {
+    "departments": [
+      "Marketing",
+      "Services",
+      "Business Development",
+      "Support",
+      "Accounting",
+      "Product Management",
+      "Human Resources",
+      "Research and Development",
+      "Sales",
+      "Legal",
+      "Engineering"
+    ],
+
+    "bloodTypes": ["O+", "A+", "B+", "O-", "A-", "B-", "AB+", "AB-"],
+    "hairColors": ["black", "brunnet", "blue", "brown"],
+    "eyeColors": ["brown", "blue", "green"]
+  }
 }

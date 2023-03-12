@@ -1,5 +1,5 @@
 // mui
-import { Breadcrumbs, Stack, Typography } from "@mui/material";
+import { Breadcrumbs, Stack, SxProps, Typography } from "@mui/material";
 // components
 import Iconify from "../global/Iconify";
 // type
@@ -7,14 +7,16 @@ import Iconify from "../global/Iconify";
 interface Props {
   heading: string;
   breadcrumbs?: any[];
+  sx?: SxProps;
 }
 
 export default function HeaderBreadCrumbs({
   heading,
   breadcrumbs = [],
+  sx,
 }: Props) {
   return (
-    <Stack spacing={1} sx={{ py: 1, mb: 3 }}>
+    <Stack spacing={1} sx={{ py: 1, mb: 3, ...sx }}>
       <Typography fontSize={24} fontWeight={700}>
         {heading}
       </Typography>

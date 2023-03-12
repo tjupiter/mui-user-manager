@@ -1,3 +1,7 @@
+// ===================================
+//        DUMMYJSON API RESPONSE
+// ===================================
+
 export interface UserApiResponse {
   users: User[];
   total: number;
@@ -79,4 +83,15 @@ export interface Address2 {
 export interface Coordinates2 {
   lat: number;
   lng: number;
+}
+
+// ===================================
+//        SETTINGS API RESPONSE
+// ===================================
+
+export interface Settings {
+  bloodTypes: string[];
+  departments: string[];
+  eyeColors: string[];
+  hairColors: string[];
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User } from "../types";
+import { User, Settings } from "../types";
 
 export async function getUsers(): Promise<User[]> {
   const {
@@ -8,10 +8,12 @@ export async function getUsers(): Promise<User[]> {
   return users;
 }
 
-export async function getDepartments(): Promise<string[]> {
-  const { data } = await axios.get(
-    "https://mui-userstable-db-default-rtdb.europe-west1.firebasedatabase.app/departments.json"
+export async function getSettings(): Promise<Settings> {
+  const {
+    data: { settings },
+  } = await axios.get(
+    "https://mui-userstable-db-default-rtdb.europe-west1.firebasedatabase.app/settings.json"
   );
-  console.log(data);
-  return data;
+  console.log(settings);
+  return settings;
 }

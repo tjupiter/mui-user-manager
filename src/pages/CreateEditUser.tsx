@@ -1,107 +1,243 @@
+import { useEffect, MouseEvent } from "react";
+import { useSnackbar } from "notistack";
+import { useLocation, useParams } from "react-router-dom";
+// mui
 import {
+  Autocomplete,
   Avatar,
   Box,
   Card,
   Grid,
+  Link,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-
 import { styled } from "@mui/material/styles";
+// components
+import { HeaderBreadCrumbs } from "../components";
+
+// API
+import { getSettings } from "../api";
+// Redux
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { setSettingsData } from "../redux/settingsSlice";
+// utils
+import useIsLoading from "../utils/custom-hooks/useIsLoading";
+// types
+import { SettingsState } from "../redux/settingsSlice";
 // ===================================
 //          CUSTOM COMPONENT
 // ===================================
 const SectionLabel = styled(Typography)(({ theme }) => ({
   fontSize: 24,
   fontWeight: 700,
-  color: "text.secondary",
 }));
 
-// ===================================
-
 export default function CreateEditUser() {
+  const { isLoading, loadingStarted, loadingFinished } = useIsLoading();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const dispatch = useAppDispatch();
+  const { pathname } = useLocation();
+  const { id } = useParams();
+  const isEdit = pathname.includes("edit");
+
+  // ===================================
+  //            FETCH SETTINGS
+  // ===================================
+
+  useEffect(() => {
+    async function fetchSettingsData() {
+      try {
+        const settings = await getSettings();
+        dispatch(setSettingsData(settings));
+      } catch (error) {
+        console.error(error);
+        enqueueSnackbar(
+          `Whoops, something went wrong here: fetchUsers() \n ${error}`
+        );
+      }
+    }
+    fetchSettingsData().finally(() => loadingFinished());
+  }, []);
+  const settingsFromRedux = useAppSelector((state) => state.settings);
+
+  // ===================================
+  //              BREADCRUMBS
+  // ===================================
+
+  function handleClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    event.preventDefault();
+    console.info("You clicked a breadcrumb.");
+  }
+
+  const BREADCRUMBS = [
+    <Link
+      underline='hover'
+      key='1'
+      color='inherit'
+      href='#'
+      // onClick={handleClick}
+    >
+      Home
+    </Link>,
+    <Link
+      underline='hover'
+      key='2'
+      color='inherit'
+      href='/user-management'
+      // onClick={handleClick}
+    >
+      User Management
+    </Link>,
+    <Typography key='3'>{isEdit ? "Edit" : "Create"} user</Typography>,
+  ];
+
+  // ===================================
   return (
-    <Grid container spacing={5} sx={{ p: 4 }}>
-      <Grid container item xs={12} md={5} direction='column'>
-        <Card sx={{ p: 3 }}>
-          <Stack spacing={2}>
-            <SectionLabel>Personail info</SectionLabel>
-            <Stack direction='row' spacing={3}>
-              <Avatar sx={{ width: 120, height: 120 }} />
-              <Stack direction='column' sx={{ width: "100%" }} spacing={1}>
+    <Box>
+      <HeaderBreadCrumbs
+        heading='User Management'
+        breadcrumbs={BREADCRUMBS}
+        sx={{ pt: 5, pl: 6 }}
+      />
+      <Grid container spacing={5} sx={{ p: 4 }}>
+        <Grid container item xs={12} md={5} direction='column'>
+          <Card sx={{ p: 5 }}>
+            <Stack spacing={5} sx={{ minHeight: "34vh" }}>
+              <Stack spacing={2}>
+                <SectionLabel>Personal info</SectionLabel>
+                <Stack direction='row' spacing={3}>
+                  <Avatar sx={{ width: 120, height: 120 }} />
+                  <Stack direction='column' sx={{ width: "100%" }} spacing={1}>
+                    <TextField
+                      label='First name'
+                      name='first_name'
+                      fullWidth
+                      variant='standard'
+                    />
+                    <TextField
+                      label='Last name'
+                      name='last_name'
+                      fullWidth
+                      variant='standard'
+                    />
+                  </Stack>
+                </Stack>
                 <TextField
-                  label='First name'
-                  name='first_name'
+                  label='Date of birth'
+                  name='dob'
                   fullWidth
                   variant='standard'
                 />
                 <TextField
-                  label='Last name'
-                  name='last_name'
+                  label='Email'
+                  name='email'
+                  fullWidth
+                  variant='standard'
+                />
+                <TextField
+                  label='Phone'
+                  name='phone'
                   fullWidth
                   variant='standard'
                 />
               </Stack>
+              <SectionLabel>Additional info</SectionLabel>
+              <Stack direction='row' spacing={3}>
+                <Autocomplete
+                  sx={{ width: "50%" }}
+                  options={settingsFromRedux.eye_color_options}
+                  getOptionLabel={(option) => option}
+                  defaultValue='All'
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant='standard'
+                      label='Eye color'
+                    />
+                  )}
+                />
+                <Autocomplete
+                  sx={{ width: "50%" }}
+                  options={settingsFromRedux.hair_color_options}
+                  getOptionLabel={(option) => option}
+                  defaultValue='All'
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant='standard'
+                      label='Hair color'
+                    />
+                  )}
+                />
+                <Autocomplete
+                  sx={{ width: "50%" }}
+                  options={settingsFromRedux.blood_group_options}
+                  getOptionLabel={(option) => option}
+                  defaultValue='All'
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant='standard'
+                      label='Blood group'
+                    />
+                  )}
+                />
+              </Stack>
             </Stack>
-            <TextField
-              label='Date of birth'
-              name='dob'
-              fullWidth
-              variant='standard'
-            />
-            <TextField
-              label='Email'
-              name='email'
-              fullWidth
-              variant='standard'
-            />
-            <TextField
-              label='Phone'
-              name='phone'
-              fullWidth
-              variant='standard'
-            />
-          </Stack>
-        </Card>
-      </Grid>
-      <Grid container item xs={12} md={7} direction='column'>
-        <Card>
-          <Stack spacing={5} sx={{ p: 3 }} direction='column'>
-            <Stack direction='column' spacing={1}>
-              <SectionLabel>Address</SectionLabel>
-              <TextField
-                label='First line'
-                name='first_line'
-                variant='standard'
-              />
-              <TextField
-                label='Second line'
-                name='second_line'
-                variant='standard'
-              />
-              <TextField
-                label='City or town'
-                name='city_or_town'
-                variant='standard'
-              />
-              <TextField label='Postcode' name='postcode' variant='standard' />
-            </Stack>
+          </Card>
+        </Grid>
+        <Grid container item xs={12} md={7} direction='column'>
+          <Card>
+            <Stack
+              spacing={5}
+              sx={{ p: 5, minHeight: "34vh" }}
+              direction='column'
+            >
+              <Stack direction='column' spacing={1}>
+                <SectionLabel>Address</SectionLabel>
+                <TextField
+                  label='First line'
+                  name='first_line'
+                  variant='standard'
+                  autoComplete='address-line1'
+                />
+                <TextField
+                  label='Second line'
+                  name='second_line'
+                  variant='standard'
+                  autoComplete='address-line2'
+                />
+                <TextField
+                  label='City or town'
+                  name='city_or_town'
+                  variant='standard'
+                />
+                <TextField
+                  label='Postcode'
+                  name='postcode'
+                  variant='standard'
+                />
+              </Stack>
 
-            <Stack direction='column' spacing={1}>
-              <SectionLabel>Work info</SectionLabel>
-              <TextField label='Company' name='company' variant='standard' />
-              <TextField
-                label='Department'
-                name='department'
-                variant='standard'
-              />
-              <TextField label='Title' name='title' variant='standard' />
+              <Stack direction='column' spacing={1}>
+                <SectionLabel>Work info</SectionLabel>
+                <TextField label='Company' name='company' variant='standard' />
+                <TextField
+                  label='Department'
+                  name='department'
+                  variant='standard'
+                />
+                <TextField label='Title' name='title' variant='standard' />
+              </Stack>
             </Stack>
-          </Stack>
-        </Card>
+          </Card>
+        </Grid>
       </Grid>
-    </Grid>
+    </Box>
   );
 }
 
