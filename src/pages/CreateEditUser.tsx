@@ -1,10 +1,11 @@
 import { useEffect, MouseEvent, useState, useMemo } from "react";
 import { useSnackbar } from "notistack";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 // mui
 import {
   Autocomplete,
   Avatar,
+  Button,
   Box,
   Card,
   Grid,
@@ -69,6 +70,7 @@ export default function CreateEditUser() {
   const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const { id } = useParams();
   const isEdit = pathname.includes("edit");
@@ -133,16 +135,18 @@ export default function CreateEditUser() {
       underline='hover'
       key='2'
       color='inherit'
-      href='/user-management'
+      href='/'
       // onClick={handleClick}
     >
       User Management
     </Link>,
-    <Typography key='3'>{isEdit ? "Edit" : "Create"} user</Typography>,
+    <Typography key='3' sx={{ textDecoration: "underline" }}>
+      {isEdit ? "Edit" : "Create"} user
+    </Typography>,
   ];
 
   // ===================================
-  //      FORM VALIDATION + RHF
+  //        FORM VALIDATION + RHF
   // ===================================
 
   const NewUserSchema = object().shape({
@@ -203,7 +207,7 @@ export default function CreateEditUser() {
   }, [user]);
 
   // ===================================
-  //            SUBMIT
+  //               SUBMIT
   // ===================================
 
   const onSubmit = async (data: Resolver) => {
@@ -216,7 +220,7 @@ export default function CreateEditUser() {
           : "New user successfully created",
         { variant: "success" }
       );
-      // navigate('/user-management')
+      navigate("/");
     } catch (error) {
       console.error(error);
       enqueueSnackbar("Something went wrong", { variant: "error" });
@@ -226,18 +230,56 @@ export default function CreateEditUser() {
   const onError = (error: any) => console.error(error);
 
   // ===================================
+  //        TEMP FN FOR TESTING
+  // ===================================
+  function fillOutForm() {
+    // const { reset } = useFormContext();
+    const randomUserValues = {
+      first_name: "Firsty",
+      last_name: "Thirsty",
+      dob: "2022-22-22",
+      email: "thirsfirst@yyy.com",
+      phone: "58973459734973492",
+      eye_color: "Brown",
+      hair_color: "Brown",
+      blood_group: "A+",
+      first_line: "32 Fuhgte Street",
+      city_or_town: "Midling",
+      postcode: "BR233HH",
+      company: "This is IT",
+      department: "MightyIT",
+      title: "IT",
+    };
+    reset(randomUserValues);
+  }
+
+  // ===================================
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit, onError)}>
       <Box>
-        <HeaderBreadCrumbs
-          heading='User Management'
-          breadcrumbs={BREADCRUMBS}
-          sx={{ pt: 5, pl: 6 }}
-        />
+        <Stack
+          direction='row'
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <HeaderBreadCrumbs
+            heading='User Management'
+            breadcrumbs={BREADCRUMBS}
+            sx={{ pt: 5, pl: 6 }}
+          />
+          <Button
+            type='button'
+            variant='contained'
+            onClick={() => fillOutForm()}
+          >
+            FillOutForm
+          </Button>
+        </Stack>
         <Grid container spacing={5} sx={{ p: 4 }}>
           <Grid container item xs={12} md={5} direction='column'>
             <Card sx={{ p: 5 }}>
-              <Stack spacing={5} sx={{ minHeight: "57vh" }}>
+              <Stack spacing={5}>
                 <Stack spacing={2}>
                   <SectionLabel>Personal info</SectionLabel>
                   <Stack direction='row' spacing={3}>
@@ -303,7 +345,7 @@ export default function CreateEditUser() {
             <Card>
               <Stack
                 spacing={5}
-                sx={{ p: 5, minHeight: "57vh" }}
+                sx={{ p: 5, minHeight: "55vh" }}
                 direction='column'
               >
                 <Stack direction='column' spacing={1}>

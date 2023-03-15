@@ -9,32 +9,30 @@ import { SnackbarProvider } from "notistack";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
 
-import { CreateEditUser, UserList, ErrorPage } from "./pages";
+import { CreateEditUser, ErrorPage } from "./pages";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/user-management",
-    element: <UserList />,
-  },
-  {
-    path: "/user-management/new",
-    element: <CreateEditUser />,
-  },
-  {
-    path: "/user-management/user/:id/edit",
-    element: <CreateEditUser />,
-  },
-  {},
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/new",
+      element: <CreateEditUser />,
+    },
+    {
+      path: "/user/:id/edit",
+      element: <CreateEditUser />,
+    },
+  ],
+  { basename: "/projects/mui-table" }
+);
 root.render(
   <React.StrictMode>
     <SnackbarProvider maxSnack={3}>

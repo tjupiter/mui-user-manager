@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 // mui
 import {
   Box,
+  Button,
   Card,
+  Divider,
   Link,
   Skeleton,
+  Stack,
   Table,
   TableBody,
   TableContainer,
@@ -14,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 // custom components
-import { TableToolBar } from "../components";
+import { Iconify, TableToolBar } from "../components";
 // hooks
 import useIsLoading from "../utils/custom-hooks/useIsLoading";
 // API
@@ -91,7 +94,7 @@ export default function UserList() {
       underline='hover'
       key='2'
       color='inherit'
-      href='/user-management'
+      href='/'
       onClick={handleClick}
     >
       Users Management
@@ -137,8 +140,7 @@ export default function UserList() {
   //                EDIT / DELETE
   // ===========================================
 
-  const handleEditRow = (id: number) =>
-    navigate(`/user-management/user/${id}/edit`);
+  const handleEditRow = (id: number) => navigate(`/user/${id}/edit`);
 
   const handleDeleteRow = (id: number) => {
     const filteredRows = users.filter((user) => user.id !== id);
@@ -158,7 +160,20 @@ export default function UserList() {
 
   return (
     <Box sx={{ px: 5 }}>
-      <HeaderBreadCrumbs heading='User Management' breadcrumbs={BREADCRUMBS} />
+      <Stack direction='row' justifyContent='space-between' alignItems='center'>
+        <HeaderBreadCrumbs
+          heading='User Management'
+          breadcrumbs={BREADCRUMBS}
+        />
+        <Button
+          variant='contained'
+          component={RouterLink}
+          to='/new'
+          startIcon={<Iconify icon={"eva:plus-fill"} />}
+        >
+          New user
+        </Button>
+      </Stack>
       <Card
         sx={{
           borderRadius: ".7rem",
@@ -168,7 +183,13 @@ export default function UserList() {
       >
         <TableContainer>
           {isLoading ? (
-            <Skeleton height={300} width={500}></Skeleton>
+            <>
+              <Skeleton height={120} width={"100%"}></Skeleton>
+              <Divider sx={{ mb: 2 }} />
+              {[...new Array(10)].map((_, i) => (
+                <Skeleton height={30} width={"100%"} key={i}></Skeleton>
+              ))}
+            </>
           ) : (
             <>
               <TableToolBar
