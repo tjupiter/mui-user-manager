@@ -3,7 +3,6 @@ import { useSnackbar } from "notistack";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 // mui
 import {
-  Autocomplete,
   Avatar,
   Button,
   Box,
@@ -11,7 +10,6 @@ import {
   Grid,
   Link,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -28,7 +26,7 @@ import { getSettings, getSingleUser } from "../api";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setSettingsData } from "../redux/settingsSlice";
 // form: YUP + RHF
-import { object, string, mixed, number } from "yup";
+import { object, string } from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormProvider from "../utils/custom-hooks/FormProvider";
@@ -36,7 +34,6 @@ import FormProvider from "../utils/custom-hooks/FormProvider";
 import useIsLoading from "../utils/custom-hooks/useIsLoading";
 import { isEmpty } from "lodash";
 // types
-import { SettingsState } from "../redux/settingsSlice";
 import { User } from "../types";
 
 interface Resolver {
@@ -59,7 +56,7 @@ interface Resolver {
 // ===================================
 //          CUSTOM COMPONENT
 // ===================================
-const SectionLabel = styled(Typography)(({ theme }) => ({
+const SectionLabel = styled(Typography)(() => ({
   fontSize: 24,
   fontWeight: 700,
 }));
@@ -227,7 +224,7 @@ export default function CreateEditUser() {
     }
   };
 
-  const onError = (error: any) => console.error(error);
+  const onError = (error: unknown) => console.error(error);
 
   // ===================================
   //        TEMP FN FOR TESTING

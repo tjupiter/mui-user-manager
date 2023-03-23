@@ -51,15 +51,8 @@ export default function UserList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    dense,
-    page,
-    rowsPerPage,
-    setPage,
-    onChangePage,
-    onChangeDense,
-    onChangeRowsPerPage,
-  } = usePagination();
+  const { page, rowsPerPage, setPage, onChangePage, onChangeRowsPerPage } =
+    usePagination();
 
   useEffect(() => {
     async function fetchUsers() {

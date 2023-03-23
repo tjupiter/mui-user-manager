@@ -1,5 +1,4 @@
 import { useState } from "react";
-import useToggle from "./useToggle";
 
 export type UsePaginationProps = {
   dense: boolean;
