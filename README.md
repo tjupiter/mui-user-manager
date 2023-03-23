@@ -2,6 +2,7 @@
 
 This project was created with 
  - Material UI - https://mui.com/
+ - Typescript - https://www.typescriptlang.org/
  - Redux Toolkit - https://redux-toolkit.js.org/
  - React Router v6.8.1 - https://reactrouter.com/en/main
  - React Hook Form - https://react-hook-form.com/
