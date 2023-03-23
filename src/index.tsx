@@ -30,8 +30,8 @@ const router = createBrowserRouter(
       path: "/user/:id/edit",
       element: <CreateEditUser />,
     },
-  ],
-  { basename: "/projects/mui-table" }
+  ]
+  // { basename: "/projects/mui-table" }
 );
 root.render(
   <React.StrictMode>

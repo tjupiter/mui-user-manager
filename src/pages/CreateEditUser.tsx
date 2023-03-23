@@ -257,7 +257,7 @@ export default function CreateEditUser() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit, onError)}>
-      <Box>
+      <Box sx={{ px: 5 }}>
         <Stack
           direction='row'
           justifyContent={"space-between"}
@@ -266,7 +266,7 @@ export default function CreateEditUser() {
           <HeaderBreadCrumbs
             heading='User Management'
             breadcrumbs={BREADCRUMBS}
-            sx={{ pt: 5, pl: 6 }}
+            sx={{ pt: 5, pl: 20 }}
           />
           <Button
             type='button'
@@ -276,7 +276,7 @@ export default function CreateEditUser() {
             FillOutForm
           </Button>
         </Stack>
-        <Grid container spacing={5} sx={{ p: 4 }}>
+        <Grid container spacing={5} sx={{ p: 4, maxWidth: 1500, mx: "auto" }}>
           <Grid container item xs={12} md={5} direction='column'>
             <Card sx={{ p: 5 }}>
               <Stack spacing={5}>

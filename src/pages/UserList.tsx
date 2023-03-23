@@ -27,6 +27,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setSettingsData } from "../redux/settingsSlice";
 // utils
 import { filterTableData } from "../utils";
+import usePagination from "../utils/custom-hooks/usePagination";
 // types
 import { User } from "../types";
 // components
@@ -46,9 +47,19 @@ export default function UserList() {
   const [searchfieldValue, setSearchfieldValue] = useState<string>("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+
+  const {
+    dense,
+    page,
+    rowsPerPage,
+    setPage,
+    onChangePage,
+    onChangeDense,
+    onChangeRowsPerPage,
+  } = usePagination();
 
   useEffect(() => {
     async function fetchUsers() {
@@ -126,6 +137,7 @@ export default function UserList() {
 
   const handleSearchfield = (fieldValue: string) => {
     setSearchfieldValue(fieldValue);
+    setPage(0);
   };
 
   const filteredData = filterTableData({
@@ -203,14 +215,16 @@ export default function UserList() {
               <Table>
                 <TableCustomHead headLabel={TABLE_HEAD} />
                 <TableBody>
-                  {filteredData.map((user) => (
-                    <TableCustomRow
-                      row={user}
-                      key={user.id}
-                      onEditRow={() => handleEditRow(user.id)}
-                      onDeleteRow={() => handleDeleteRow(user.id)}
-                    />
-                  ))}
+                  {filteredData
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((user) => (
+                      <TableCustomRow
+                        row={user}
+                        key={user.id}
+                        onEditRow={() => handleEditRow(user.id)}
+                        onDeleteRow={() => handleDeleteRow(user.id)}
+                      />
+                    ))}
                   {isNotFound && <TableNoData title='Not Found' />}
                 </TableBody>
               </Table>
@@ -219,11 +233,12 @@ export default function UserList() {
         </TableContainer>
         <TablePagination
           component='div'
-          rowsPerPage={10}
-          page={1}
-          count={users.length}
+          page={page}
+          count={filteredData.length}
+          rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[5, 10, 20]}
-          onPageChange={() => console.log("onpagechange")}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
         />
       </Card>
     </Box>
