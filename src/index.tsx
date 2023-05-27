@@ -12,7 +12,7 @@ import { SnackbarProvider } from "notistack";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
 
-import { CreateEditUser, ErrorPage } from "./pages";
+import { CreateEditUser, ErrorPage, NotFound } from "./pages";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -32,6 +32,10 @@ const router = createBrowserRouter(
     {
       path: "/user/:id/edit",
       element: <CreateEditUser />,
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ],
   // { basename: "/projects/mui-user-manager" }
