@@ -1,6 +1,6 @@
 import { useState, MouseEvent } from "react";
 //mui
-import { IconButton, TableRow, TableCell, MenuItem } from "@mui/material";
+import { TableRow, TableCell, MenuItem } from "@mui/material";
 // components
 import { AlertDialog, Iconify } from "..";
 // utils
@@ -47,8 +47,9 @@ export default function TableCustomRow({ row, onDeleteRow, onEditRow }: Props) {
     onOpen: openDialog,
     onClose: closeDialog,
   } = useToggle();
+
   // ==================================
-  // ==================================
+
   return (
     <>
       {isDialogOpen && (

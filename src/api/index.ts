@@ -7,6 +7,7 @@ export async function getUsers(): Promise<User[]> {
   } = await axios.get("https://dummyjson.com/users");
   return users;
 }
+
 export async function getSingleUser(id: number): Promise<User> {
   const { data } = await axios.get(`https://dummyjson.com/users/${id}`);
   return data;

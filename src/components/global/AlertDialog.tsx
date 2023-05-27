@@ -10,14 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 // type
-type colors =
-  | "inherit"
-  | "primary"
-  | "secondary"
-  | "success"
-  | "error"
-  | "info"
-  | "warning";
+import { ButtonColors } from "../../types";
 
 type Props = {
   dialogTitle: string;
@@ -32,12 +25,11 @@ type Props = {
   isDialogOpen: boolean;
   agreeButtonText?: string;
   disagreeButtonText?: string;
-  agreeButtonColor?: colors;
-  disagreeButtonColor?: colors;
+  agreeButtonColor?: ButtonColors;
+  disagreeButtonColor?: ButtonColors;
 };
 
-// color options: https://mui.com/material-ui/api/button/ <|||> https://mui.com/material-ui/customization/palette/
-// handeCloseDialog controls the visibility from the parent component
+// ===================================
 
 export default function AlertDialog({
   dialogTitle,
@@ -55,11 +47,12 @@ export default function AlertDialog({
     handleCloseDialog();
     dialogDisagree();
   };
-
   const handleAgree = () => {
     handleCloseDialog();
     dialogAgree();
   };
+
+  // ===================================
 
   return (
     <Dialog

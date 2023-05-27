@@ -1,9 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import reportWebVitals from "./reportWebVitals";
+
 import "./index.css";
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import { SnackbarProvider } from "notistack";
 // redux
 import { store } from "./redux/store";
@@ -30,8 +33,8 @@ const router = createBrowserRouter(
       path: "/user/:id/edit",
       element: <CreateEditUser />,
     },
-  ]
-  // { basename: "/projects/mui-user-manager" }
+  ],
+  { basename: "/projects/mui-user-manager" }
 );
 root.render(
   <React.StrictMode>

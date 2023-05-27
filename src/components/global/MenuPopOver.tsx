@@ -2,20 +2,7 @@
 import { styled } from "@mui/material/styles";
 import { Popover, PopoverProps } from "@mui/material";
 // type
-
-type Arrow =
-  | "top-left"
-  | "top-center"
-  | "top-right"
-  | "bottom-left"
-  | "bottom-center"
-  | "bottom-right"
-  | "left-top"
-  | "left-center"
-  | "left-bottom"
-  | "right-top"
-  | "right-center"
-  | "right-bottom";
+import { Arrow } from "../../types";
 
 type ArrowStyleProps = {
   arrow: Arrow;

@@ -1,0 +1,16 @@
+export const RANDOM_USER_VALUES = {
+  first_name: "Firsty",
+  last_name: "Thirsty",
+  dob: "2022-22-22",
+  email: "thirsfirst@yyy.com",
+  phone: "58973459734973492",
+  eye_color: "Brown",
+  hair_color: "Brown",
+  blood_group: "A+",
+  first_line: "32 Fuhgte Street",
+  city_or_town: "Midling",
+  postcode: "BR233HH",
+  company: "This is IT",
+  department: "MightyIT",
+  title: "IT",
+};

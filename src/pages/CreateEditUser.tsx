@@ -1,6 +1,7 @@
 import { useEffect, MouseEvent, useState, useMemo } from "react";
 import { useSnackbar } from "notistack";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { isEmpty } from "lodash";
 // mui
 import {
   Avatar,
@@ -32,30 +33,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import FormProvider from "../utils/custom-hooks/FormProvider";
 // utils
 import useIsLoading from "../utils/custom-hooks/useIsLoading";
-import { isEmpty } from "lodash";
+import { RANDOM_USER_VALUES } from "../utils";
 // types
-import { User } from "../types";
-
-interface Resolver {
-  first_name: string;
-  last_name: string;
-  dob: string;
-  email: string;
-  phone: number | string;
-  eye_color: string;
-  hair_color: string;
-  blood_group: string;
-  first_line: string;
-  city_or_town: string;
-  postcode: string;
-  company: string;
-  department: string;
-  title: string;
-}
+import { User, SubmitDataResolver } from "../types";
 
 // ===================================
 //          CUSTOM COMPONENT
 // ===================================
+
 const SectionLabel = styled(Typography)(() => ({
   fontSize: 24,
   fontWeight: 700,
@@ -107,7 +92,6 @@ export default function CreateEditUser() {
     fetchSettingsData().finally(() => loadingFinished());
   }, []);
   const settingsFromRedux = useAppSelector((state) => state.settings);
-  // console.log(user);
 
   // ===================================
   //              BREADCRUMBS
@@ -183,7 +167,7 @@ export default function CreateEditUser() {
     [user]
   );
 
-  const methods = useForm<Resolver>({
+  const methods = useForm<SubmitDataResolver>({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });
@@ -207,7 +191,7 @@ export default function CreateEditUser() {
   //               SUBMIT
   // ===================================
 
-  const onSubmit = async (data: Resolver) => {
+  const onSubmit = async (data: SubmitDataResolver) => {
     try {
       // !isEmpty(user) ? await updateUser(data, user.id) : createUser(data)
       console.log(data);
@@ -230,24 +214,7 @@ export default function CreateEditUser() {
   //        TEMP FN FOR TESTING
   // ===================================
   function fillOutForm() {
-    // const { reset } = useFormContext();
-    const randomUserValues = {
-      first_name: "Firsty",
-      last_name: "Thirsty",
-      dob: "2022-22-22",
-      email: "thirsfirst@yyy.com",
-      phone: "58973459734973492",
-      eye_color: "Brown",
-      hair_color: "Brown",
-      blood_group: "A+",
-      first_line: "32 Fuhgte Street",
-      city_or_town: "Midling",
-      postcode: "BR233HH",
-      company: "This is IT",
-      department: "MightyIT",
-      title: "IT",
-    };
-    reset(randomUserValues);
+    reset(RANDOM_USER_VALUES);
   }
 
   // ===================================

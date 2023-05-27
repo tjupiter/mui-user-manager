@@ -23,7 +23,7 @@ import useIsLoading from "../utils/custom-hooks/useIsLoading";
 // API
 import { getUsers, getSettings } from "../api";
 // redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setSettingsData } from "../redux/settingsSlice";
 // utils
 import { filterTableData } from "../utils";

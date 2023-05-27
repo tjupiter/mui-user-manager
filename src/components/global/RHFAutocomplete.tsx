@@ -7,20 +7,18 @@ import {
   AutocompleteGetTagProps,
   AutocompleteRenderOptionState,
   Avatar,
-  Input,
   InputAdornment,
   SxProps,
   TextField,
 } from "@mui/material";
 // types
-
-type TextFieldVariants = "filled" | "outlined" | "standard" | undefined;
+import { TextFieldVariants } from "../../types";
 
 interface Props {
   name: string;
   label: string;
   options: string[];
-  defaultValue: string | string[];
+  defaultValue?: string | string[];
   renderOption?: (
     props: React.HTMLAttributes<HTMLLIElement>,
     option: any,
@@ -75,20 +73,20 @@ export default function RHFAutocomplete({
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <Autocomplete
+          disableCloseOnSelect={disableCloseOnSelect}
           isOptionEqualToValue={isOptionEqualToValue}
           filterOptions={filterOptions}
-          fullWidth
-          multiple={multiple}
-          limitTags={limitTags}
-          disableCloseOnSelect={disableCloseOnSelect}
           filterSelectedOptions={filterSelectedOptions}
+          fullWidth
+          getOptionLabel={getOptionLabel}
+          limitTags={limitTags}
+          multiple={multiple}
+          noOptionsText={noOptionsText}
           options={options}
           onChange={(e, newValue) => onChange(newValue)}
           renderOption={renderOption}
           renderTags={renderTags}
           value={value}
-          noOptionsText={noOptionsText}
-          getOptionLabel={getOptionLabel}
           sx={{ ...sx }}
           renderInput={(params) => {
             !!params.inputProps.value &&

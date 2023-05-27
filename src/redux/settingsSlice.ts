@@ -1,17 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
 // types
-import { Settings } from "../types";
-
-// type bloodGroupOptions =
-//   | "O+"
-//   | "A+"
-//   | "B+"
-//   | "O-"
-//   | "A-"
-//   | "B-"
-//   | "AB+"
-//   | "AB-";
 
 export interface SettingsState {
   eye_color_options: string[];
