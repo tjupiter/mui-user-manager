@@ -39,4 +39,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy with rsync
-        run: rsync -avz ./build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/web/portfolio.pitju.hu/projects/mui-user-manager
+        run: rsync -avz ./build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST2 }}:/web/portfolio.pitju.hu/projects/mui-user-manager
