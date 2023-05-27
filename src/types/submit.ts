@@ -4,9 +4,9 @@ export interface SubmitDataResolver {
   dob: string;
   email: string;
   phone: number | string;
-  eye_color: string;
-  hair_color: string;
-  blood_group: string;
+  eye_color: string | null;
+  hair_color: string | null;
+  blood_group: string | null;
   first_line: string;
   city_or_town: string;
   postcode: string;

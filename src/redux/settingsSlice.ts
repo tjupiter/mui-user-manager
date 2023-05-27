@@ -20,14 +20,11 @@ export const settingsSlice = createSlice({
   initialState: initialSettingState,
   reducers: {
     setSettingsData(state, { payload }) {
-      state.eye_color_options = payload.eyeColors;
-      state.eye_color_options.unshift("All");
-      state.hair_color_options = payload.hairColors;
-      state.hair_color_options.unshift("All");
-      state.blood_group_options = payload.bloodTypes;
-      state.blood_group_options.unshift("All");
-      state.department_options = payload.departments;
-      state.department_options.unshift("All");
+      state.eye_color_options = payload.eyeColors.sort();
+      state.hair_color_options = payload.hairColors.sort();
+      state.blood_group_options = payload.bloodTypes.sort();
+      state.department_options = payload.departments.sort();
+      // state.department_options.unshift("All");
     },
   },
 });

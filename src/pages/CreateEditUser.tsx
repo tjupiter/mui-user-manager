@@ -154,9 +154,9 @@ export default function CreateEditUser() {
       dob: user?.birthDate || "",
       email: user?.email || "",
       phone: user?.phone || "",
-      eye_color: user?.eyeColor || "",
-      hair_color: user?.hair.color || "",
-      blood_group: user?.bloodGroup || "",
+      eye_color: user?.eyeColor || null,
+      hair_color: user?.hair.color || null,
+      blood_group: user?.bloodGroup || null,
       first_line: user?.address.address || "",
       city_or_town: user?.address.city || "",
       postcode: user?.address.postalCode || "",
@@ -175,16 +175,12 @@ export default function CreateEditUser() {
   const {
     handleSubmit,
     reset,
+    watch,
     formState: { isSubmitting },
   } = methods;
-
+  console.log(watch("eye_color"));
   useEffect(() => {
-    if (!isEmpty(user) && user) {
-      reset(defaultValues);
-    }
-    if (!isEmpty(user)) {
-      reset(defaultValues);
-    }
+    !isEmpty(user) && reset(defaultValues);
   }, [user]);
 
   // ===================================
@@ -281,7 +277,7 @@ export default function CreateEditUser() {
                     name='eye_color'
                     options={settingsFromRedux.eye_color_options}
                     textFieldVariant='standard'
-                    defaultValue='All'
+                    defaultValue=''
                     sx={{ width: "50%" }}
                     //
                   />
@@ -290,7 +286,7 @@ export default function CreateEditUser() {
                     name='hair_color'
                     options={settingsFromRedux.hair_color_options}
                     textFieldVariant='standard'
-                    defaultValue='All'
+                    defaultValue=''
                     sx={{ width: "50%" }}
                   />
                   <RHFAutocomplete
@@ -298,7 +294,7 @@ export default function CreateEditUser() {
                     name='blood_group'
                     options={settingsFromRedux.blood_group_options}
                     textFieldVariant='standard'
-                    defaultValue='All'
+                    // defaultValue=''
                     sx={{ width: "50%" }}
                   />
                 </Stack>
