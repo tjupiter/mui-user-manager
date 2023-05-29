@@ -17,39 +17,42 @@ import {
   Typography,
 } from "@mui/material";
 // custom components
-import { Iconify, TableToolBar } from "../components";
+import {
+  Iconify,
+  HeaderBreadCrumbs,
+  TableCustomHead,
+  TableCustomRow,
+  TableNoData,
+  TableToolBar,
+} from "../components";
 // hooks
-import useIsLoading from "../utils/custom-hooks/useIsLoading";
+import useIsLoading from "../hooks/useIsLoading";
+import usePagination from "../hooks/usePagination";
+// context + providers
+import { useUserAuth } from "../contexts-providers/UserAuthContext";
 // API
 import { getUsers, getSettings } from "../api";
 // redux
 import { useDispatch } from "react-redux";
 import { setSettingsData } from "../redux/settingsSlice";
-// utils
+// utils + hooks
 import { filterTableData } from "../utils";
-import usePagination from "../utils/custom-hooks/usePagination";
 // types
 import { User } from "../types";
 // components
-import {
-  HeaderBreadCrumbs,
-  TableCustomHead,
-  TableCustomRow,
-  TableNoData,
-} from "../components";
 
 export default function UserList() {
   const { isLoading, loadingStarted, loadingFinished } = useIsLoading();
+
   const [users, setUsers] = useState<User[]>([]);
   const [departmentOptions, setDepartmentOptions] = useState<string[]>(["All"]);
-
   const [department, setDepartment] = useState<string>("All");
   const [searchfieldValue, setSearchfieldValue] = useState<string>("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
+  const { logOut } = useUserAuth();
 
   const { page, rowsPerPage, setPage, onChangePage, onChangeRowsPerPage } =
     usePagination();
@@ -106,9 +109,9 @@ export default function UserList() {
     <Typography key='3'>Users</Typography>,
   ];
 
-  // ===========================================
-  //         TABLE CONSTS AND FUNCTIONS
-  // ===========================================
+  // ===================================
+  //     TABLE CONSTS AND FUNCTIONS
+  // ===================================
 
   const TABLE_HEAD = [
     { id: "firstName", label: "Name", align: "left" },
@@ -120,9 +123,9 @@ export default function UserList() {
     { id: "3dot-menu" },
   ];
 
-  // ===========================================
-  //                  FILTERING
-  // ===========================================
+  // ===================================
+  //              FILTERING
+  // ===================================
 
   const handleFilterDropdown = (selectedDept: string) => {
     setDepartment(selectedDept);
@@ -141,9 +144,9 @@ export default function UserList() {
 
   const isNotFound = filteredData.length === 0;
 
-  // ===========================================
-  //                EDIT / DELETE
-  // ===========================================
+  // ===================================
+  //           EDIT / DELETE
+  // ===================================
 
   const handleEditRow = (id: number) => navigate(`/user/${id}/edit`);
 
@@ -163,8 +166,31 @@ export default function UserList() {
     // }
   };
 
+  // ===================================
+  //               LOGOUT
+  // ===================================
+
+  const handleLogOut = async () => {
+    try {
+      await logOut();
+      enqueueSnackbar(`Succesfully logged out`);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar(`Couldn't log out`, { variant: "error" });
+    }
+  };
+
+  // ===================================
+
   return (
     <Box sx={{ px: 5 }}>
+      <Stack direction='row' alignItems='center' justifyContent='flex-end'>
+        <Button onClick={() => handleLogOut()}>
+          <Iconify icon='eva:power-outline' sx={{ pr: 1 }} />
+          Log out
+        </Button>
+      </Stack>
       <Stack direction='row' justifyContent='space-between' alignItems='center'>
         <HeaderBreadCrumbs
           heading='User Management'

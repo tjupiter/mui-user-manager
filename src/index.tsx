@@ -1,54 +1,81 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-import reportWebVitals from "./reportWebVitals";
-
-import "./index.css";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+//components
 import App from "./App";
-
-import { SnackbarProvider } from "notistack";
+import { CreateEditUser, ErrorPage, Login, NotFound, Signup } from "./pages";
+import { UserAuthContextProvider } from "./contexts-providers/UserAuthContext";
+import NotistackProvider from "./contexts-providers/NotistackProvider";
+import ProtectedRoute from "./contexts-providers/ProtectedRoute";
 // redux
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
+//
+import reportWebVitals from "./reportWebVitals";
+//
+import "./index.css";
+//
 
-import { CreateEditUser, ErrorPage, NotFound } from "./pages";
+const development = process.env.NODE_ENV === "development" ? true : false;
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+// This needs to get sorted so is the Routes/ProtectedRoutes
 
 const router = createBrowserRouter(
   [
     {
       path: "/",
-      element: <App />,
+      element: <Login />,
+    },
+    {
+      path: "/user-management",
+      element: (
+        <ProtectedRoute>
+          <App />
+        </ProtectedRoute>
+      ),
       errorElement: <ErrorPage />,
     },
     {
-      path: "/new",
-      element: <CreateEditUser />,
+      path: "/signup",
+      element: <Signup />,
     },
     {
-      path: "/user/:id/edit",
-      element: <CreateEditUser />,
+      path: "/user-management/new",
+      element: (
+        <ProtectedRoute>
+          <CreateEditUser />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/user-management/user/:id/edit",
+      element: (
+        <ProtectedRoute>
+          <CreateEditUser />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "*",
       element: <NotFound />,
     },
   ],
-  // { basename: "/projects/mui-user-manager" }
-  { basename: "/" }
+  { basename: development ? "/" : "/projects/mui-user-manager" }
 );
+
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+
 root.render(
   <React.StrictMode>
-    <SnackbarProvider maxSnack={3}>
-      {" "}
+    <NotistackProvider>
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <UserAuthContextProvider>
+          <RouterProvider router={router} />
+        </UserAuthContextProvider>
       </Provider>
-    </SnackbarProvider>
+    </NotistackProvider>
   </React.StrictMode>
 );
 

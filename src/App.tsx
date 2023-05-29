@@ -7,9 +7,10 @@ export default function App() {
   return (
     <Box
       sx={{
-        p: 2,
+        px: 2,
         m: "4rem auto",
         maxWidth: "1200px",
+        position: "relative",
       }}
     >
       <UserList />

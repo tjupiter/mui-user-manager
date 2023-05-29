@@ -47,9 +47,9 @@ export default function TableToolBar({
           startAdornment: (
             <Iconify
               icon='carbon:search'
-              width={30}
-              height={30}
-              sx={{ pr: 2 }}
+              width={25}
+              height={25}
+              sx={{ pr: 2, color: "lightgray" }}
             />
           ),
         }}

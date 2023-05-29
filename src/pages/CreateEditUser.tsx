@@ -30,9 +30,9 @@ import { setSettingsData } from "../redux/settingsSlice";
 import { object, string } from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import FormProvider from "../utils/custom-hooks/FormProvider";
+import FormProvider from "../contexts-providers/FormProvider";
 // utils
-import useIsLoading from "../utils/custom-hooks/useIsLoading";
+import useIsLoading from "../hooks/useIsLoading";
 import { RANDOM_USER_VALUES } from "../utils";
 // types
 import { User, SubmitDataResolver } from "../types";
@@ -178,7 +178,7 @@ export default function CreateEditUser() {
     watch,
     formState: { isSubmitting },
   } = methods;
-  console.log(watch("eye_color"));
+
   useEffect(() => {
     !isEmpty(user) && reset(defaultValues);
   }, [user]);
@@ -209,6 +209,7 @@ export default function CreateEditUser() {
   // ===================================
   //        TEMP FN FOR TESTING
   // ===================================
+
   function fillOutForm() {
     reset(RANDOM_USER_VALUES);
   }

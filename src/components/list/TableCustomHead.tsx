@@ -4,11 +4,11 @@ interface Props {
   headLabel: any[];
 }
 const tableHeadSx = {
-  backgroundColor: "lightblue",
-  "& th:first-child": {
+  backgroundColor: "rgba(192, 228, 245, 1)",
+  "& th:first-of-type": {
     borderRadius: "1em 0 0 0",
   },
-  "& th:last-child": {
+  "& th:last-of-type": {
     borderRadius: "0 1em 0 0",
   },
 };

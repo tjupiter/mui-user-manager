@@ -4,7 +4,7 @@ import { TableRow, TableCell, MenuItem } from "@mui/material";
 // components
 import { AlertDialog, Iconify } from "..";
 // utils
-import useToggle from "../../utils/custom-hooks/useToggle";
+import useToggle from "../../hooks/useToggle";
 // types
 import { User } from "../../types";
 import TableMoreMenu from "./TableMoreMenu";
@@ -21,7 +21,7 @@ export default function TableCustomRow({ row, onDeleteRow, onEditRow }: Props) {
   const RowHoverSx = {
     px: 10,
     "&:hover": {
-      backgroundColor: "lightblue",
+      backgroundColor: "rgba(192, 228, 245, 0.1)",
     },
   };
 
