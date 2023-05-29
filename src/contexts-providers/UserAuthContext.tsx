@@ -46,9 +46,13 @@ export function UserAuthContextProvider({
   }
 
   async function logIn(email: string, password: string) {
-    setPersistence(auth, browserSessionPersistence).then(() => {
-      return signInWithEmailAndPassword(auth, email, password);
-    });
+    setPersistence(auth, browserSessionPersistence)
+      .then(() => {
+        return signInWithEmailAndPassword(auth, email, password);
+      })
+      .catch((error) => {
+        return error;
+      });
   }
 
   async function logOut() {

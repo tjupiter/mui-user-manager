@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import { object, string } from "yup";
@@ -33,7 +33,7 @@ export default function Login() {
   const navigate = useNavigate();
   const slideParentContainer = useRef(null);
 
-  const { logIn } = useUserAuth();
+  const { user, logIn } = useUserAuth();
 
   const [loginError, setLoginError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +43,7 @@ export default function Login() {
   // ===================================
 
   const loginSchema = object().shape({
-    username: string().required("Username is required"),
+    username: string().email().required("Username is required"),
     password: string().required("Password is required"),
   });
 
@@ -65,7 +65,7 @@ export default function Login() {
     try {
       await logIn(data.username, data.password);
       navigate("/user-management");
-    } catch (error: unknown | FirebaseError) {
+    } catch (error) {
       console.error(error);
       setLoginError(true);
       enqueueSnackbar(`${(error as FirebaseError).message}`, {
@@ -88,108 +88,123 @@ export default function Login() {
   // ===================================
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit, onError)}>
-      <Stack
-        alignItems='center'
-        justifyContent='center'
-        sx={{ height: "100vh" }}
-        spacing={2}
-      >
-        <Card sx={{ width: "30%", maxWidth: 400, p: 5 }}>
-          <Stack direction='column' spacing={2}>
-            <Stack direction='column' sx={{ mb: 2 }}>
-              <Typography fontWeight={700} fontSize={40} textAlign={"center"}>
-                Sign in
-              </Typography>
-              <Typography textAlign='center' variant='subtitle2'>
-                to MUI User Management
-              </Typography>
-            </Stack>
-            <RHFTextField name='username' label='Email' />
-            <RHFTextField
-              name='password'
-              type={!showPassword ? "password" : "text"}
-              label='Password'
-              autoComplete='current-password'
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton onClick={() => setShowPassword(!showPassword)}>
-                      <Iconify
-                        icon={
-                          showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
-                        }
-                      ></Iconify>
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <Box ref={slideParentContainer}>
-              <Slide
-                in={loginError}
-                mountOnEnter
-                unmountOnExit
-                container={slideParentContainer.current}
-                direction='down'
-                timeout={{ enter: 200, exit: 0 }}
-              >
-                <Typography textAlign={"center"} sx={{ color: "#E32222" }}>
-                  Wrong email / password
-                </Typography>
-              </Slide>
-            </Box>
-            {!loginError ? (
-              <LoadingButton
-                type='submit'
-                variant='outlined'
-                loading={isSubmitting}
-                sx={{ width: "60%", alignSelf: "center" }}
-              >
-                Login
-              </LoadingButton>
-            ) : (
-              <Slide
-                in={loginError}
-                mountOnEnter
-                unmountOnExit
-                container={slideParentContainer.current}
-                direction='down'
-                timeout={{ enter: 400, exit: 0 }}
-              >
-                <Button
-                  size='small'
-                  variant='outlined'
-                  onClick={resetLoginValues}
-                >
-                  Reset Login Credentails
-                </Button>
-              </Slide>
-            )}
-          </Stack>
-        </Card>
-        <Card
-          sx={{
-            width: "30%",
-            maxWidth: 400,
-            py: 2,
-            px: 5,
-            display: "flex",
-            direction: "row",
-            justifyContent: "center",
-            gap: 1,
-          }}
+    <>
+      {user ? (
+        <Navigate to='/user-management' />
+      ) : (
+        <FormProvider
+          methods={methods}
+          onSubmit={handleSubmit(onSubmit, onError)}
         >
-          <Link
-            component={Typography}
-            onClick={() => navigate("/signup")}
-            sx={{ cursor: "pointer" }}
+          <Stack
+            alignItems='center'
+            justifyContent='center'
+            sx={{ height: "100vh" }}
+            spacing={2}
           >
-            Sign up
-          </Link>{" "}
-          <Typography>instead</Typography>
-        </Card>
-      </Stack>
-    </FormProvider>
+            <Card sx={{ width: "30%", maxWidth: 400, p: 5 }}>
+              <Stack direction='column' spacing={2}>
+                <Stack direction='column' sx={{ mb: 2 }}>
+                  <Typography
+                    fontWeight={700}
+                    fontSize={40}
+                    textAlign={"center"}
+                  >
+                    Sign in
+                  </Typography>
+                  <Typography textAlign='center' variant='subtitle2'>
+                    to MUI User Management
+                  </Typography>
+                </Stack>
+                <RHFTextField name='username' label='Email' />
+                <RHFTextField
+                  name='password'
+                  type={!showPassword ? "password" : "text"}
+                  label='Password'
+                  autoComplete='current-password'
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          <Iconify
+                            icon={
+                              showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                            }
+                          ></Iconify>
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Box ref={slideParentContainer}>
+                  <Slide
+                    in={loginError}
+                    mountOnEnter
+                    unmountOnExit
+                    container={slideParentContainer.current}
+                    direction='down'
+                    timeout={{ enter: 200, exit: 0 }}
+                  >
+                    <Typography textAlign={"center"} sx={{ color: "#E32222" }}>
+                      Wrong email / password
+                    </Typography>
+                  </Slide>
+                </Box>
+                {!loginError ? (
+                  <LoadingButton
+                    type='submit'
+                    variant='outlined'
+                    loading={isSubmitting}
+                    sx={{ width: "60%", alignSelf: "center" }}
+                  >
+                    Login
+                  </LoadingButton>
+                ) : (
+                  <Slide
+                    in={loginError}
+                    mountOnEnter
+                    unmountOnExit
+                    container={slideParentContainer.current}
+                    direction='down'
+                    timeout={{ enter: 400, exit: 0 }}
+                  >
+                    <Button
+                      size='small'
+                      variant='outlined'
+                      onClick={resetLoginValues}
+                    >
+                      Reset Login Credentails
+                    </Button>
+                  </Slide>
+                )}
+              </Stack>
+            </Card>
+            <Card
+              sx={{
+                width: "30%",
+                maxWidth: 400,
+                py: 2,
+                px: 5,
+                display: "flex",
+                direction: "row",
+                justifyContent: "center",
+                gap: 1,
+              }}
+            >
+              <Link
+                component={Typography}
+                onClick={() => navigate("/signup")}
+                sx={{ cursor: "pointer" }}
+              >
+                Sign up
+              </Link>{" "}
+              <Typography>instead</Typography>
+            </Card>
+          </Stack>
+        </FormProvider>
+      )}
+    </>
   );
 }

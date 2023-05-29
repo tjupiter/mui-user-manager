@@ -17,6 +17,7 @@ This project was created with
 # To-Do
 
 - [ ] fix auth-state-persistance - https://firebase.google.com/docs/auth/web/auth-state-persistence#web-version-9
+- [ ] fix error handling on login page in production - it doesn't throw an error
 - [ ] fix Github Actions for CI/CD
 - [ ] extract routes to separate file from ./index.tsx
 
