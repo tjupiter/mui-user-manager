@@ -89,24 +89,24 @@ export default function UserList() {
 
   const BREADCRUMBS = [
     <Link
-      underline='hover'
-      key='1'
-      color='inherit'
-      href='#'
+      underline="hover"
+      key="1"
+      color="inherit"
+      href="#"
       onClick={handleClick}
     >
       Home
     </Link>,
     <Link
-      underline='hover'
-      key='2'
-      color='inherit'
-      href='/'
+      underline="hover"
+      key="2"
+      color="inherit"
+      href="/"
       onClick={handleClick}
     >
       Users Management
     </Link>,
-    <Typography key='3'>Users</Typography>,
+    <Typography key="3">Users</Typography>,
   ];
 
   // ===================================
@@ -185,21 +185,21 @@ export default function UserList() {
 
   return (
     <Box sx={{ px: 5 }}>
-      <Stack direction='row' alignItems='center' justifyContent='flex-end'>
+      <Stack direction="row" alignItems="center" justifyContent="flex-end">
         <Button onClick={() => handleLogOut()}>
-          <Iconify icon='eva:power-outline' sx={{ pr: 1 }} />
+          <Iconify icon="eva:power-outline" sx={{ pr: 1 }} />
           Log out
         </Button>
       </Stack>
-      <Stack direction='row' justifyContent='space-between' alignItems='center'>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
         <HeaderBreadCrumbs
-          heading='User Management'
+          heading="User Management"
           breadcrumbs={BREADCRUMBS}
         />
         <Button
-          variant='contained'
+          variant="contained"
           component={RouterLink}
-          to='/new'
+          to="/user-management/new"
           startIcon={<Iconify icon={"eva:plus-fill"} />}
         >
           New user
@@ -244,14 +244,14 @@ export default function UserList() {
                         onDeleteRow={() => handleDeleteRow(user.id)}
                       />
                     ))}
-                  {isNotFound && <TableNoData title='Not Found' />}
+                  {isNotFound && <TableNoData title="Not Found" />}
                 </TableBody>
               </Table>
             </>
           )}
         </TableContainer>
         <TablePagination
-          component='div'
+          component="div"
           page={page}
           count={filteredData.length}
           rowsPerPage={rowsPerPage}
