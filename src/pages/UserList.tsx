@@ -148,7 +148,8 @@ export default function UserList() {
   //           EDIT / DELETE
   // ===================================
 
-  const handleEditRow = (id: number) => navigate(`/user/${id}/edit`);
+  const handleEditRow = (id: number) =>
+    navigate(`/user-management/user/${id}/edit`);
 
   const handleDeleteRow = (id: number) => {
     const filteredRows = users.filter((user) => user.id !== id);
