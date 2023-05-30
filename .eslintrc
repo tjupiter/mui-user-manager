@@ -1,0 +1,53 @@
+{
+  "plugins": ["@typescript-eslint"],
+  "extends": ["react-app"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["**/tsconfig.json"]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
+
+  "rules": {
+    "react/jsx-key": 2,
+    "arrow-body-style": 1,
+    "import/no-duplicates": 1,
+    "react/self-closing-comp": 1,
+    "@typescript-eslint/no-shadow": 0,
+    "import/no-useless-path-segments": 1,
+    "import/no-extraneous-dependencies": 0,
+    "@typescript-eslint/naming-convention": 0,
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-unused-vars": "off",
+    "object-curly-spacing": [1, "always"],
+    "no-duplicate-imports": ["error"],
+    "@typescript-eslint/no-duplicate-imports": "error",
+    // "@typescript-eslint/no-unused-vars": ["error", {
+    //   "argsIgnorePattern": "^_",
+    //   "varsIgnorePattern": "^_",
+    //   "caughtErrorsIgnorePattern": "^_"
+    // }],
+    "prefer-destructuring": [
+      1,
+      {
+        "object": true,
+        "array": false
+      }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
+  }
+}

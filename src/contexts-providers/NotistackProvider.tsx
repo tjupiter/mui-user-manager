@@ -9,7 +9,7 @@ import { Iconify } from "../components";
 type Props = {
   children: ReactNode;
 };
-
+console.log("lsddfasdf");
 export default function NotistackProvider({ children }: Props) {
   const notistackRef = useRef<any>(null);
 
@@ -22,28 +22,28 @@ export default function NotistackProvider({ children }: Props) {
       ref={notistackRef}
       dense
       maxSnack={3}
-      variant='info'
+      variant="info"
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       iconVariant={{
         info: <Iconify icon={"eva:info-fill"} sx={{ pr: 1 }} />,
         success: (
           <Iconify
             icon={"eva:checkmark-circle-2-fill"}
-            color='success'
+            color="success"
             sx={{ pr: 1 }}
           />
         ),
         warning: (
           <Iconify
             icon={"eva:alert-triangle-fill"}
-            color='warning'
+            color="warning"
             sx={{ pr: 1 }}
           />
         ),
         error: (
           <Iconify
             icon={"eva:alert-circle-fill"}
-            color='error'
+            color="error"
             sx={{ pr: 1 }}
           />
         ),
@@ -54,7 +54,7 @@ export default function NotistackProvider({ children }: Props) {
             icon={"eva:close-fill"}
             width={20}
             height={20}
-            color='#fff'
+            color="#fff"
           />
         </IconButton>
       )}
